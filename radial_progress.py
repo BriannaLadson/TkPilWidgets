@@ -83,29 +83,35 @@ class TkRadialProgress(Canvas):
 
 		user_angle = self.options["start_angle"] % 360
 		pillow_start = -user_angle
-
 		angle = 360 * (self.value / self.max_value)
 
-		if self.options["direction"] == "clockwise":
+		if self.options["direction"] == "clockwise" or self.value == 0:
 			end_angle = pillow_start + angle
+			
+			ring_color = self.options["background_color"]
+			progress_color = self.options["progress_color"]
+			
 		else:
 			end_angle = pillow_start - angle
+			
+			ring_color = self.options["progress_color"]
+			progress_color = self.options["background_color"]
 
-		# Full ring using progress color
+		# Full ring using background color
 		draw.arc(
 			[center - radius, center - radius, center + radius, center + radius],
 			start=0,
 			end=360,
-			fill=self.options["progress_color"],
+			fill=ring_color,
 			width=border_thickness
 		)
 
-		# Overlay arc using background color
+		# Overlay arc using progress color
 		draw.arc(
 			[center - radius, center - radius, center + radius, center + radius],
 			start=pillow_start,
 			end=end_angle,
-			fill=self.options["background_color"],
+			fill=progress_color,
 			width=border_thickness
 		)
 
@@ -153,18 +159,18 @@ if __name__ == "__main__":
 
 	progress = TkRadialProgress(
 		root,
-		value=0,
+		value=100,
 		max_value=100,
 		size=300,
 		progress_color="#f44336",
-		background_color="#f7b6b0",
+		background_color="yellow",
 		border_thickness=30,
 		outline_thickness=0,
 		outline_color="#000",
 		start_angle=90,
-		direction="counterclockwise",
+		direction="clockwise",
 		show_percent_text=True,
-		auto_increment=True,
+		auto_increment=False,
 		increment_step=1,
 		increment_interval=100,
 		loop=True
